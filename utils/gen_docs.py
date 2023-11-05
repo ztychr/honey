@@ -4,12 +4,11 @@ from random import choice
 from string import ascii_uppercase, ascii_lowercase
 import urllib.parse, os
 
-base_url = 'https://nordskov.net/honey?'
+base_url = 'https://nordskov.net:8080/honey?'
 #print(url + urllib.parse.urlencode(params))
 
 data = {
-    "blue": 3,
-    "red": 4,
+    "blue": 1,
 }
 
 #for i in data:
@@ -29,14 +28,14 @@ def main(data):
                 f.write(
                     make_canary_msword(
                         url=url,
-                        template="/home/user/honey/utils/templates/template.docx",
+                        template="templates/template.docx",
                     )
                 )
             with open("output/%s/testdoc-%s-%s.xlsx" % (idx, group, idx), "wb") as f:
                 f.write(
                     make_canary_msexcel(
                         url=url,
-                        template="/home/user/honey/utils/templates/template.docx",
+                        template="templates/template.docx",
                     )
                 )
 
