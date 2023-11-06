@@ -4,7 +4,7 @@ from random import choice
 from string import ascii_uppercase, ascii_lowercase
 import urllib.parse, os
 
-base_url = 'http://nordskov.net:8080/honey?'
+base_url = 'http://localhost:5000/?group=red&id=id'
 #print(url + urllib.parse.urlencode(params))
 
 data = {
