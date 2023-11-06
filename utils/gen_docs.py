@@ -28,14 +28,14 @@ def main(data):
                 f.write(
                     make_canary_msword(
                         url=url,
-                        template="/home/user/honey/utils/templates/template.docx",
+                        template="templates/template.docx",
                     )
                 )
             with open("output/%s/testdoc-%s-%s.xlsx" % (idx, group, idx), "wb") as f:
                 f.write(
                     make_canary_msexcel(
                         url=url,
-                        template="/home/user/honey/utils/templates/template.docx",
+                        template="templates/template.docx",
                     )
                 )
 
