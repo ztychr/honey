@@ -1,0 +1,57 @@
+{
+    "group": "mitnick",
+    "id": "1337",
+    "src": "xlsx",
+    "data": {
+        "date": "2023-11-11 22:50:40.958699",
+        "timestamp": "1699739440.958699",
+        "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/115.0"
+    },
+    "whois": {
+        "status": "fail",
+        "message": "reserved range",
+        "query": "127.0.0.1"
+    }
+}{
+    "group": "mitnick",
+    "id": "1337",
+    "src": "xlsx",
+    "data": {
+        "date": "2023-11-11 22:51:06.312158",
+        "timestamp": "1699739466.312158",
+        "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/115.0"
+    },
+    "whois": {
+        "status": "fail",
+        "message": "reserved range",
+        "query": "127.0.0.1"
+    }
+}{
+    "group": "mitnick",
+    "id": "1337",
+    "src": "docx-html",
+    "data": {
+        "date": "2023-11-11 22:53:00.168129",
+        "timestamp": "1699739580.168129",
+        "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/115.0"
+    },
+    "whois": {
+        "status": "fail",
+        "message": "reserved range",
+        "query": "127.0.0.1"
+    }
+}{
+    "group": "mitnick",
+    "id": "1337",
+    "src": "docx-html",
+    "data": {
+        "date": "2023-11-11 22:55:22.031071",
+        "timestamp": "1699739722.031071",
+        "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/115.0"
+    },
+    "whois": {
+        "status": "fail",
+        "message": "reserved range",
+        "query": "127.0.0.1"
+    }
+}
