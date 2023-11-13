@@ -2,7 +2,7 @@ from lib.msword import make_canary_msword
 from lib.msexcel import make_canary_msexcel
 from random import choice
 from string import ascii_uppercase, ascii_lowercase
-import urllib.parse, os
+import urllib.parse, os, random
 
 base_url = 'http://localhost:5000/?'
 #print(url + urllib.parse.urlencode(params))
@@ -59,15 +59,14 @@ def main(LANG, data, layout, base_url):
                         url=base_url + urllib.parse.urlencode(params)
                         make_html(filex, folder, url)
 
-#                        if not os.path.exists("output/%s/%s/%s" % (group, idx, folder)):
-#                            os.makedirs("output/%s/%s/%s" % (group, idx, folder))
-
 def make_html(file_name, path, url):
     with open("templates/index.da.html", "r") as f:
         data = f.read() 
         data = data.replace("REPLACE", url)               
     with open("output/%s/%s.html" % (path, file_name), "w") as file:
         file.write(data)
+        time = gen_time()
+    os.utime(file.name, (time, time))
 
 def make_docx(file_name, path, url):
     with open("output/%s/%s" % (path, file_name), "wb") as f:
@@ -77,6 +76,8 @@ def make_docx(file_name, path, url):
                 template="templates/template.docx",
             )
         )
+    time = gen_time()
+    os.utime(f.name, (time, time))
 
 def make_xlsx(file_name, path, url):
     with open("output/%s/%s" % (path, file_name), "wb") as f:
@@ -86,6 +87,14 @@ def make_xlsx(file_name, path, url):
                 template="templates/template.docx",
             )
         )
+    time = gen_time()
+    os.utime(f.name, (time, time))
+
+
+def gen_time():
+    time = random.randint(1694031783, 1696118400)
+    return time
 
 if __name__ == "__main__":
     main(LANG, data, layout, base_url)
+
