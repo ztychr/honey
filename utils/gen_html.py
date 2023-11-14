@@ -58,11 +58,10 @@ def main(LANG, data, layout, base_url):
                     elif file_type == "docx":
                         params["src"] = "docx"
                         url=base_url + urllib.parse.urlencode(params).replace("&", "&amp;")
-                        print(url)
                         make_docx(filex, folder, url)
                     elif file_type == "xlsx":
                         params["src"] = "xlxs"
-                        url=base_url + urllib.parse.urlencode(params)
+                        url=base_url + urllib.parse.urlencode(params).replace("&", "&amp;")
                         make_xlsx(filex, folder, url)
                     elif file_type == "pdf":
                         params["src"] = "pdf"

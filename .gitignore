@@ -5,4 +5,4 @@ tokens.json
 flashdrive
 output
 data.json
-
+*.bak
