@@ -5,7 +5,7 @@ from string import ascii_uppercase, ascii_lowercase
 from datetime import datetime
 import urllib.parse, os, random
 
-base_url = 'http://localhost:5000/?'
+base_url = 'http://nordskov.net:8080/?'
 #print(url + urllib.parse.urlencode(params))
 
 LANG="DA"
@@ -57,7 +57,8 @@ def main(LANG, data, layout, base_url):
                         make_html(filex, folder, url)
                     elif file_type == "docx":
                         params["src"] = "docx"
-                        url=base_url + urllib.parse.urlencode(params)
+                        url=base_url + urllib.parse.urlencode(params).replace("&", "&amp;")
+                        print(url)
                         make_docx(filex, folder, url)
                     elif file_type == "xlsx":
                         params["src"] = "xlxs"
@@ -82,7 +83,7 @@ def make_docx(file_name, path, url):
         f.write(
             make_canary_msword(
                 url=url,
-                template="templates/template.docx",
+                template="/home/user/thesis/honey/utils/templates/template.docx",
             )
         )
     time = gen_time(sync=False)
@@ -93,7 +94,7 @@ def make_xlsx(file_name, path, url):
         f.write(
             make_canary_msexcel(
                 url=url,
-                template="templates/template.docx",
+                template="templates/template.xlsx",
             )
         )
     time = gen_time(sync=False)
@@ -101,10 +102,7 @@ def make_xlsx(file_name, path, url):
 
 
 def gen_time(sync: bool):
-    if sync:
-        time = 1699583472
-    else:
-        time = random.randint(1698796800, 1699920000)
+    time = 1699583472 if sync else random.randint(1698796800, 1699920000)
     return time
 
 if __name__ == "__main__":

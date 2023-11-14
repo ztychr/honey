@@ -16,8 +16,8 @@ def index():
     timestamp = datetime.timestamp(date)
     user_agent = request.headers.get('User-Agent')
     ip = request.remote_addr
-    group = request.args.get('group')
-    idx = request.args.get('id')
+    group = request.args.get('group').strip("\\")
+    idx = request.args.get('id').strip("\\")
     #typex = request.args.get('type')
     src = request.args.get('src')
     
