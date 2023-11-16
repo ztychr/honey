@@ -20,21 +20,22 @@ def index():
     idx = request.args.get('id').strip("\\")
     #typex = request.args.get('type')
     src = request.args.get('src')
-    
+    filename = request.args.get('filename')
     info = json.loads(requests.get("http://ip-api.com/json/%s" % ip).text)
 
-    #x_forwarded_for = request.headers.get("X-Forwarded-For")
-    #if x_forwarded_for:
-    #    ip_list = x_forwarded_for.split(",")
-    #    ip = ip_list[0]
+    x_forwarded_for = request.headers.get("X-Forwarded-For")
+    if x_forwarded_for:
+        ip_list = x_forwarded_for.split(",")
+        ip = ip_list[0]
             
     data = {
-        "group": group,
         "id": idx,
-        #"type": typex,
-        "src": src,
         "data":
         {
+            "group": group,
+            #"type": typex,
+            "src": src,
+            "filename": filename, 
             "date": str(date),
             "timestamp": str(timestamp),
             "User-Agent": user_agent,

@@ -6,6 +6,7 @@ from datetime import datetime
 import urllib.parse, os, random
 
 base_url = 'http://nordskov.net:8080/?'
+base_url = 'http://localhost:5000/?'
 #print(url + urllib.parse.urlencode(params))
 
 LANG="DA"
@@ -53,18 +54,22 @@ def main(LANG, data, layout, base_url):
                     file_type = filex.rsplit('.', 1)[-1]# for x in la]
                     if file_type == "jpg":
                         params["src"] = "html"
+                        params["filename"] = filex
                         url=base_url + urllib.parse.urlencode(params)
                         make_html(filex, folder, url)
                     elif file_type == "docx":
                         params["src"] = "docx"
+                        params["filename"] = filex
                         url=base_url + urllib.parse.urlencode(params).replace("&", "&amp;")
                         make_docx(filex, folder, url)
                     elif file_type == "xlsx":
                         params["src"] = "xlxs"
+                        params["filename"] = filex
                         url=base_url + urllib.parse.urlencode(params).replace("&", "&amp;")
                         make_xlsx(filex, folder, url)
                     elif file_type == "pdf":
                         params["src"] = "pdf"
+                        params["filename"] = filex
                         url=base_url + urllib.parse.urlencode(params)
                         make_html(filex, folder, url)
 
