@@ -5,8 +5,7 @@ from string import ascii_uppercase, ascii_lowercase
 from datetime import datetime
 import urllib.parse, os, random
 
-base_url = 'http://nordskov.net:8080/?'
-base_url = 'http://localhost:5000/?'
+base_url = 'http://pid.dk/?'
 #print(url + urllib.parse.urlencode(params))
 
 LANG="DA"
