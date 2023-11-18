@@ -70,7 +70,7 @@ def boeing():
     
 def check_entry(group, idx, src, filename):
     try:
-        with open('entries/%s.entries.json' % group, 'r', encoding='utf-8') as f:
+        with open('data/%s.entries.json' % group, 'r', encoding='utf-8') as f:
             entries = json.load(f)
     except FileNotFoundError:
         return abort(401)

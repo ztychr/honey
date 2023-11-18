@@ -113,7 +113,9 @@ def make_xlsx(file_name, path, url):
     os.utime(f.name, (time, time))
 
 def register_entry(params):
-    file_path = "../entries/%s.entries.json" % params['group']
+    if not os.path.exists("../data"):# and not folder == "Root":
+        os.makedirs("../data")
+    file_path = "../data/%s.entries.json" % params['group']
 
     try:
         with open(file_path, 'r') as file:
