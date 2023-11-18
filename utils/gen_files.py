@@ -90,7 +90,7 @@ def make_docx(file_name, folder, url):
         f.write(
             make_canary_msword(
                 url=url,
-                template="/home/user/thesis/honey/utils/templates/template.docx",
+                template="templates/template.docx",
             )
         )
     time = gen_time(sync=False)
