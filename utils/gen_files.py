@@ -3,11 +3,14 @@ from lib.msexcel import make_canary_msexcel
 from random import choice
 from string import ascii_uppercase, ascii_lowercase
 from datetime import datetime
-import urllib.parse, os, random, json
+import urllib.parse, os, sys, random, json
 
-base_url = 'https://pid.dk/?'
+#base_url = 'https://pid.dk/?'
 base_url = 'http://127.0.0.1:5000/?'
-#print(url + urllib.parse.urlencode(params))
+if len(sys.argv) > 1:
+    PATH=sys.argv[1]
+else:
+    PATH="output"
 
 LANG="DA"
 
@@ -19,36 +22,28 @@ layout = {
         "IMG_2623.jpg",
         "IMG_2624.jpg",
         "IMG_2625.jpg",
-        "IMG_2626.jpg",
-        "IMG_2627.jpg",
-        "IMG_2628.jpg",
-        "IMG_2629.jpg",
-        "IMG_2630.jpg",
-        "IMG_2631.jpg",
     ],
     
     "Important Docs": [
         "Meeting-Notes.docx",
         "Payslip-October.docx",
-        "Budget-OLD.xlsx",
         "Budget-2024.xlsx",
         "Resume.pdf",
-        "Resume-new.pdf",
         "Performance-Appraisal.pdf"
     ]
 }
 
-def main(LANG, data, layout, base_url):
+def main(data, layout, base_url):
     for group in data:
         for i in range(data[group]):
             idx = ''.join(choice(ascii_uppercase+ascii_lowercase) for i in range(12))
             params = {"group": group, "id": idx}
         
             for folder in layout:
-                if not os.path.exists("output/%s" % folder):# and not folder == "Root":
-                    os.makedirs("output/%s" % folder)
+                if not os.path.exists("%s/%s" % (PATH, folder)): # and not folder == "Root":
+                    os.makedirs("%s/%s" % (PATH, folder))
                     time = gen_time(sync=False)
-                    os.utime("output/%s" % folder, (time, time))
+                    os.utime("%s/%s" % (PATH, folder), (time, time))
 
                 for filex in layout[folder]:
                     file_type = filex.rsplit('.', 1)[-1]# for x in la]
@@ -81,17 +76,17 @@ def main(LANG, data, layout, base_url):
                         register_entry(params)
                         print(url)
 
-def make_html(file_name, path, url):
+def make_html(file_name, folder, url):
     with open("templates/index.da.html", "r") as f:
         data = f.read() 
         data = data.replace("REPLACE", url)               
-    with open("output/%s/%s.html" % (path, file_name), "w") as file:
+    with open("%s/%s/%s.html" % (PATH, folder, file_name), "w") as file:
         file.write(data)
     time = gen_time(sync=True) if ".jpg" in file_name else gen_time(sync=False)
     os.utime(file.name, (time, time))
 
-def make_docx(file_name, path, url):
-    with open("output/%s/%s" % (path, file_name), "wb") as f:
+def make_docx(file_name, folder, url):
+    with open("%s/%s/%s" % (PATH, folder, file_name), "wb") as f:
         f.write(
             make_canary_msword(
                 url=url,
@@ -101,8 +96,8 @@ def make_docx(file_name, path, url):
     time = gen_time(sync=False)
     os.utime(f.name, (time, time))
 
-def make_xlsx(file_name, path, url):
-    with open("output/%s/%s" % (path, file_name), "wb") as f:
+def make_xlsx(file_name, folder, url):
+    with open("%s/%s/%s" % (PATH, folder, file_name), "wb") as f:
         f.write(
             make_canary_msexcel(
                 url=url,
@@ -137,5 +132,5 @@ def gen_time(sync: bool):
     return time
 
 if __name__ == "__main__":
-    main(LANG, data, layout, base_url)
+    main(data, layout, base_url)
 
