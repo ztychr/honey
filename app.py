@@ -13,7 +13,6 @@ def index():
     ip = request.headers.get('X-Real-Ip')
     try:
         group = request.args.get('group').strip("\\")
-        print(group)
         idx = request.args.get('id').strip("\\")
         src = request.args.get('src')
         filename = request.args.get('filename')
@@ -21,8 +20,8 @@ def index():
     except:
         abort(418)
 
-    if not check_entry(group, idx, src, filename):
-        abort(401)
+#    if not check_entry(group, idx, src, filename):
+#        abort(401)
     
     data = {
         "id": idx,
@@ -38,14 +37,14 @@ def index():
         "whois": info,
     }
     
-#    if src == "qr":
-#        with open('data/%s.qr.json' % group, 'a', encoding='utf-8') as f:
-#            json.dump(data, f, ensure_ascii=False, indent=4)
-#    else:
-#        with open('data/%s.drive.json' % group, 'a', encoding='utf-8') as f:
-#            json.dump(data, f, ensure_ascii=False, indent=4)
-
     if src == "qr":
+        with open('data/%s.qr.json' % group, 'a', encoding='utf-8') as f:
+            json.dump(data, f, ensure_ascii=False, indent=4)
+    else:
+        with open('data/%s.drive.json' % group, 'a', encoding='utf-8') as f:
+            json.dump(data, f, ensure_ascii=False, indent=4)
+
+"""    if src == "qr":
         file_path = 'data/%s.qr.json' % group
     else:
         file_path = 'data/%s.drive.json' % group
@@ -59,7 +58,7 @@ def index():
 
     with open(file_path, 'w') as file:
         json.dump(existing_data, file, indent=4)
-    
+"""    
     #print(json.dumps(data, indent=4))
     return render_template("index.da.html")
 
