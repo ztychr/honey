@@ -58,21 +58,28 @@ def main(LANG, data, layout, base_url):
                         url=base_url + urllib.parse.urlencode(params)  
                         make_html(filex, folder, url)
                         register_entry(params)
+                        print(url)
                     elif file_type == "docx":
                         params["src"] = "docx"
                         params["filename"] = filex
                         url=base_url + urllib.parse.urlencode(params).replace("&", "&amp;")
                         make_docx(filex, folder, url)
+                        register_entry(params)
+                        print(url)
                     elif file_type == "xlsx":
                         params["src"] = "xlxs"
                         params["filename"] = filex
                         url=base_url + urllib.parse.urlencode(params).replace("&", "&amp;")
+                        register_entry(params)
                         make_xlsx(filex, folder, url)
+                        print(url)
                     elif file_type == "pdf":
                         params["src"] = "pdf"
                         params["filename"] = filex
                         url=base_url + urllib.parse.urlencode(params)
                         make_html(filex, folder, url)
+                        register_entry(params)
+                        print(url)
 
 def make_html(file_name, path, url):
     with open("templates/index.da.html", "r") as f:

@@ -11,11 +11,15 @@ def index():
     timestamp = datetime.timestamp(date)
     user_agent = request.headers.get('User-Agent')
     ip = request.headers.get('X-Real-Ip')
-    group = request.args.get('group').strip("\\")
-    idx = request.args.get('id').strip("\\")
-    src = request.args.get('src')
-    filename = request.args.get('filename')
-    info = json.loads(requests.get("http://ip-api.com/json/%s" % ip).text)
+    try:
+        group = request.args.get('group').strip("\\")
+        print(group)
+        idx = request.args.get('id').strip("\\")
+        src = request.args.get('src')
+        filename = request.args.get('filename')
+        info = json.loads(requests.get("http://ip-api.com/json/%s" % ip).text)
+    except:
+        abort(418)
 
     if not check_entry(group, idx, src, filename):
         abort(401)
@@ -51,12 +55,6 @@ def index():
             existing_data = json.load(file)
     except FileNotFoundError:
         existing_data = { "boeing": [] }
-        print(existing_data)
-
-    if group in existing_data:
-        existing_data[group].append(data)
-    else:
-#        existing_data[group] = [append(data)]
         existing_data[group].append(data)
 
     with open(file_path, 'w') as file:
@@ -75,7 +73,7 @@ def check_entry(group, idx, src, filename):
         with open('entries/%s.entries.json' % group, 'r', encoding='utf-8') as f:
             entries = json.load(f)
     except FileNotFoundError:
-        return abort(418)
+        return abort(401)
     
     if idx in entries:
         for entry in entries[idx]:
@@ -84,6 +82,7 @@ def check_entry(group, idx, src, filename):
                 entry.get('filename') == filename):
                 print("Entry OK")
                 return True
+                
     print("Entry NOT OK")
     return False
     
