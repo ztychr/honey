@@ -3,14 +3,15 @@ from lib.msexcel import make_canary_msexcel
 from random import choice
 from string import ascii_uppercase, ascii_lowercase
 from datetime import datetime
-import urllib.parse, os, random
+import urllib.parse, os, random, json
 
-base_url = 'http://pid.dk/?'
+base_url = 'https://pid.dk/?'
+base_url = 'http://127.0.0.1:5000/?'
 #print(url + urllib.parse.urlencode(params))
 
 LANG="DA"
 
-data = {"boing": 1}
+data = {"boeing": 1}
 
 layout = {
     "Christmas Party": [
@@ -54,8 +55,9 @@ def main(LANG, data, layout, base_url):
                     if file_type == "jpg":
                         params["src"] = "html"
                         params["filename"] = filex
-                        url=base_url + urllib.parse.urlencode(params)
+                        url=base_url + urllib.parse.urlencode(params)  
                         make_html(filex, folder, url)
+                        register_entry(params)
                     elif file_type == "docx":
                         params["src"] = "docx"
                         params["filename"] = filex
@@ -103,7 +105,24 @@ def make_xlsx(file_name, path, url):
     time = gen_time(sync=False)
     os.utime(f.name, (time, time))
 
+def register_entry(params):
+    file_path = "../entries/%s.entries.json" % params['group']
 
+    try:
+        with open(file_path, 'r') as file:
+            existing_data = json.load(file)
+    except FileNotFoundError:
+        existing_data = {}
+
+    entry_id = params['id']
+    if entry_id in existing_data:
+        existing_data[entry_id].append(params)
+    else:
+        existing_data[entry_id] = [params]
+
+    with open(file_path, 'w') as file:
+        json.dump(existing_data, file, indent=4)
+    
 def gen_time(sync: bool):
     time = 1699583472 if sync else random.randint(1698796800, 1699920000)
     return time

@@ -1,12 +1,7 @@
-from flask import Flask, request, render_template, send_file
+from flask import Flask, request, render_template, send_file, abort
 from urllib.parse import urlparse
 from datetime import datetime
-import json, uuid, requests
-
-# http://127.0.0.1:5000/group=boeing&id=1337&src=docx
-# http://127.0.0.1:5000/group=mitnick&id=1337&src=html
-# http://127.0.0.1:5000/group=cogwheel&id=1337&src=qr
-# http://127.0.0.1:5000/group=cogwheel&id=1337&src=docx-html
+import json, requests
 
 app = Flask(__name__)
 
@@ -22,17 +17,13 @@ def index():
     filename = request.args.get('filename')
     info = json.loads(requests.get("http://ip-api.com/json/%s" % ip).text)
 
-    # For running through a proxied vpn-tunnel
-#    x_forwarded_for = request.headers.get("X-Forwarded-For")
-#    if x_forwarded_for:
-#        ip_list = x_forwarded_for.split(",")
-#        ip = ip_list[0]
-            
-    data = {
+    if not check_entry(group, idx, src, filename):
+        abort(401)
+    
+    data = { 
         "id": idx,
         "group": group,
         "src": src,
-        #"type": typex,
         "data":
         {
             "filename": filename, 
@@ -42,15 +33,32 @@ def index():
         },
         "whois": info,
     }
-
-    if src == "qr":
-        with open('data/%s.qr.json' % group, 'a', encoding='utf-8') as f:
-            json.dump(data, f, ensure_ascii=False, indent=4)
-    else:
-        with open('data/%s.drive.json' % group, 'a', encoding='utf-8') as f:
-            json.dump(data, f, ensure_ascii=False, indent=4)
     
-    print(json.dumps(data, indent=4))
+#    if src == "qr":
+#        with open('data/%s.qr.json' % group, 'a', encoding='utf-8') as f:
+#            json.dump(data, f, ensure_ascii=False, indent=4)
+#    else:
+#        with open('data/%s.drive.json' % group, 'a', encoding='utf-8') as f:
+#            json.dump(data, f, ensure_ascii=False, indent=4)
+
+    file_path = 'data/%s.drive.json' % group
+    try:
+        with open(file_path, 'r') as file:
+            existing_data = json.load(file)
+    except FileNotFoundError:
+        existing_data = { "boeing": [] }
+        print(existing_data)
+
+    if group in existing_data:
+        existing_data[group].append(data)
+    else:
+#        existing_data[group] = [append(data)]
+        existing_data[group].append(data)
+
+    with open(file_path, 'w') as file:
+        json.dump(existing_data, file, indent=4)
+    
+    #print(json.dumps(data, indent=4))
     return render_template("index.da.html")
 
 @app.route("/info", methods=['GET'])
@@ -58,26 +66,20 @@ def boeing():
     group = request.headers.get("group")
     return render_template("index.da.html")
     
+def check_entry(group, idx, src, filename):
+    try:
+        with open('entries/%s.entries.json' % group, 'r', encoding='utf-8') as f:
+            entries = json.load(f)
+    except FileNotFoundError:
+        return abort(418)
     
-"""
-#"ip": ip,
-#"Accept": accept,
-#"Accept-Language": accept_la,
-#"Accept-Encoding": accept_en,
-
-accept = request.headers.get('Accept')
-accept_la = request.headers.get('Accept-Language')
-accept_en = request.headers.get('Accept-Encoding')
-print(request.environ['REMOTE_ADDR'])
-print(request.environ.get('HTTP_X_REAL_IP'))
-print(request.environ.get('HTTP_X_FORWARDED_FOR'))
-        
-    if request.method == 'POST':
-        data = request.json
-        print(data)
-        with open('data.json', 'a', encoding='utf-8') as f:
-            json.dump(data, f, ensure_ascii=False, indent=4)
-            print("token registeret")
-
-    return "OK"
-"""
+    if idx in entries:
+        for entry in entries[idx]:
+            if (entry.get('group') == group and
+                entry.get('src') == src and
+                entry.get('filename') == filename):
+                print("Entry OK")
+                return True
+    print("Entry NOT OK")
+    return False
+    
