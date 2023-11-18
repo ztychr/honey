@@ -43,6 +43,8 @@ def index():
     else:
         with open('data/%s.drive.json' % group, 'a', encoding='utf-8') as f:
             json.dump(data, f, ensure_ascii=False, indent=4)
+            
+    return render_template("index.da.html")
 
 """    if src == "qr":
         file_path = 'data/%s.qr.json' % group
@@ -60,7 +62,7 @@ def index():
         json.dump(existing_data, file, indent=4)
 """    
     #print(json.dumps(data, indent=4))
-    return render_template("index.da.html")
+    
 
 @app.route("/info", methods=['GET'])
 def boeing():
