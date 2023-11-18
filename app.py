@@ -20,7 +20,7 @@ def index():
     if not check_entry(group, idx, src, filename):
         abort(401)
     
-    data = { 
+    data = {
         "id": idx,
         "group": group,
         "src": src,
@@ -41,7 +41,11 @@ def index():
 #        with open('data/%s.drive.json' % group, 'a', encoding='utf-8') as f:
 #            json.dump(data, f, ensure_ascii=False, indent=4)
 
-    file_path = 'data/%s.drive.json' % group
+    if src == "qr":
+        file_path = 'data/%s.qr.json' % group
+    else:
+        file_path = 'data/%s.drive.json' % group
+        
     try:
         with open(file_path, 'r') as file:
             existing_data = json.load(file)
