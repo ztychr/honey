@@ -5,7 +5,7 @@ import json, requests
 
 app = Flask(__name__)
 
-@app.route("/", methods=['GET'])
+@app.route("/usb", methods=['GET'])
 def index():
     date = datetime.now()
     timestamp = datetime.timestamp(date)
@@ -20,8 +20,12 @@ def index():
     except:
         abort(418)
 
-    if not check_entry(group, idx, src, filename):
-        abort(401)
+    if src == "qr":
+        if not check_entry_qr(group, idx, src):
+            abort(401)
+    else:
+        if not check_entry_usb(group, idx, src, filename):
+            abort(401)
     
     data = {
         "id": idx,
@@ -67,14 +71,9 @@ def index():
     return render_template("index.da.html")
 """
 
-@app.route("/info", methods=['GET'])
-def boeing():
-    group = request.headers.get("group")
-    return render_template("index.da.html")
-    
-def check_entry(group, idx, src, filename):
+def check_entry_usb(group, idx, src, filename):
     try:
-        with open('data/%s.entries.json' % group, 'r', encoding='utf-8') as f:
+        with open('data/%s.usb.entries.json' % group, 'r', encoding='utf-8') as f:
             entries = json.load(f)
     except FileNotFoundError:
         return abort(401)
@@ -89,4 +88,22 @@ def check_entry(group, idx, src, filename):
                 
     print("Entry NOT OK")
     return False
+
+def check_entry_qr(group, idx, src):
+    try:
+        with open('data/%s.qr.entries.json' % group, 'r', encoding='utf-8') as f:
+            entries = json.load(f)
+    except FileNotFoundError:
+        return abort(401)
     
+    if idx in entries:
+        for entry in entries[idx]:
+            if (entry.get('group') == group and
+                entry.get('src') == src):
+                print("Entry OK")
+                return True
+                
+    print("Entry NOT OK")
+    return False
+    
+
