@@ -5,18 +5,20 @@ from string import ascii_uppercase, ascii_lowercase
 from datetime import datetime
 import urllib.parse, os, sys, random, json
 
-#base_url = 'https://pid.dk/?'
-base_url = 'http://127.0.0.1:5000/?'
+base_url = 'https://pid.dk/?'
+#base_url = 'http://127.0.0.1:5000/?'
 LANG="DA"
 
 data = {"boeing": 1}
 
 qr = { "boeing": 10 }
-"""
+
 layout = {
-    "Christmas Party": [
-        "Notes.docx",
-        "Notes.xlsx",
+    "DOCS": [
+        "test.docx",
+        "test.xlsx",
+        "test.jpg",
+        "test.pdf",
     ]
 }
 """
@@ -36,7 +38,7 @@ layout = {
         "Performance-Appraisal.docx"
     ]
 }
-
+"""
 if len(sys.argv) > 1:
     PATH=sys.argv[1]
 else:
@@ -90,7 +92,6 @@ def gen_qr_links(qr, baseurl):
             url=base_url + urllib.parse.urlencode(params)
             register_entry_qr(params)
             print("QR", url)
-    
                         
 def make_html(file_name, folder, url):
     template = "templates/index.da.html" if LANG == "DA" else "templates/index.html"
@@ -107,7 +108,7 @@ def make_docx(file_name, folder, url):
         f.write(
             make_canary_msword(
                 url=url,
-                template = "templates/template.da.xlsx" if LANG == "DA" else "templates/template.xlsx",
+                template = "templates/template.da.docx" if LANG == "DA" else "templates/template.docx",
             )
         )
     time = gen_time(sync=False)
@@ -118,7 +119,7 @@ def make_xlsx(file_name, folder, url):
         f.write(
             make_canary_msexcel(
                 url=url,
-                template = "templates/template.da.docx" if LANG == "DA" else "templates/template.docx",
+                template = "templates/template.da.xlsx" if LANG == "DA" else "templates/template.xlsx",
             )
         )
     time = gen_time(sync=False)
