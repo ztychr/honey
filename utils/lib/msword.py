@@ -36,6 +36,7 @@ def make_canary_msword(url: str, template: Path):
             contents = zipinfo_contents_replace(
                 zipfile=doc, zipinfo=entry, search="HONEYDROP_TOKEN_URL", replace=url
             )
+            contents = contents.replace("http://REPLACEME/", url)
             contents = contents.replace("aaaaaaaaaaaaaaaaaaaa", created_ts)
             contents = contents.replace("bbbbbbbbbbbbbbbbbbbb", now_ts)
             output_zip.writestr(entry, contents)
