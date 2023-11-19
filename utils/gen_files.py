@@ -7,15 +7,11 @@ import urllib.parse, os, sys, random, json
 
 #base_url = 'https://pid.dk/?'
 base_url = 'http://127.0.0.1:5000/?'
-if len(sys.argv) > 1:
-    PATH=sys.argv[1]
-else:
-    PATH="output"
-
-LANG="DA"
 
 data = {"boeing": 1}
+
 qr = { "boeing": 10 }
+
 layout = {
     "Christmas Party": [
         "IMG_2622.jpg",
@@ -32,6 +28,11 @@ layout = {
         "Performance-Appraisal.docx"
     ]
 }
+
+if len(sys.argv) > 1:
+    PATH=sys.argv[1]
+else:
+    PATH="output"
 
 def gen_usb_files(data, layout, base_url):
     for group in data:
@@ -71,6 +72,7 @@ def gen_usb_files(data, layout, base_url):
                         url=base_url + urllib.parse.urlencode(params)
                         make_html(filex, folder, url)
                         register_entry_usb(params)
+                    print("File", url)
 
 def gen_qr_links(qr, baseurl):
     for group in qr:
@@ -79,7 +81,7 @@ def gen_qr_links(qr, baseurl):
             params = {"group": group, "id": idx, "src": "qr"}
             url=base_url + urllib.parse.urlencode(params)
             register_entry_qr(params)
-            print(url)
+            print("QR", url)
     
                         
 def make_html(file_name, folder, url):
