@@ -8,13 +8,11 @@ app = Flask(__name__)
 @app.route("/", methods=['GET'])
 def index():
     process_request(request)
-    
     return render_template("index.da.html")
 
 @app.route("/img", methods=['GET'])
 def img():
     process_request(request)
-    
     return send_file("123222.png")
 
 def process_request(request):
