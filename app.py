@@ -5,8 +5,19 @@ import json, requests
 
 app = Flask(__name__)
 
-@app.route("/usb", methods=['GET'])
+@app.route("/", methods=['GET'])
 def index():
+    process_request(request)
+    
+    return render_template("index.da.html")
+
+@app.route("/img", methods=['GET'])
+def img():
+    process_request(request)
+    
+    return send_file("123222.png")
+
+def process_request(request):
     date = datetime.now()
     timestamp = datetime.timestamp(date)
     user_agent = request.headers.get('User-Agent')
@@ -58,7 +69,7 @@ def index():
         json.dump(existing_data, file, indent=4)
 
     print(json.dumps(data, indent=4))
-    return render_template("index.da.html")
+
 
 """    
     if src == "qr":

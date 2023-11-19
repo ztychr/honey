@@ -6,7 +6,7 @@ from datetime import datetime
 import urllib.parse, os, sys, random, json
 
 #base_url = 'https://pid.dk/?'
-base_url = 'http://127.0.0.1:5000/?'
+base_url = 'http://127.0.0.1:5000/img?'
 if len(sys.argv) > 1:
     PATH=sys.argv[1]
 else:
