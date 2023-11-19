@@ -12,14 +12,13 @@ LANG="DA"
 data = {"boeing": 1}
 
 qr = { "boeing": 10 }
-
+"""
 layout = {
     "Christmas Party": [
         "Notes.docx",
         "Notes.xlsx",
     ]
 }
-
 """
 layout = {
     "Christmas Party": [
@@ -37,7 +36,7 @@ layout = {
         "Performance-Appraisal.docx"
     ]
 }
-"""
+
 if len(sys.argv) > 1:
     PATH=sys.argv[1]
 else:
@@ -94,7 +93,8 @@ def gen_qr_links(qr, baseurl):
     
                         
 def make_html(file_name, folder, url):
-    with open("templates/index.da.html", "r") as f:
+    template = "templates/index.da.html" if LANG == "DA" else "templates/index.html"
+    with open(template, "r") as f:
         data = f.read() 
         data = data.replace("REPLACE", url)
     with open("%s/%s/%s.html" % (PATH, folder, file_name), "w") as file:
@@ -107,7 +107,7 @@ def make_docx(file_name, folder, url):
         f.write(
             make_canary_msword(
                 url=url,
-                template="templates/template.docx",
+                template = "templates/template.da.xlsx" if LANG == "DA" else "templates/template.xlsx",
             )
         )
     time = gen_time(sync=False)
@@ -118,7 +118,7 @@ def make_xlsx(file_name, folder, url):
         f.write(
             make_canary_msexcel(
                 url=url,
-                template="templates/template.xlsx",
+                template = "templates/template.da.docx" if LANG == "DA" else "templates/template.docx",
             )
         )
     time = gen_time(sync=False)
