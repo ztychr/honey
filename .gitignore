@@ -6,3 +6,5 @@ flashdrive
 output
 data/*
 *.bak
+*new-batch/
+*new-order/

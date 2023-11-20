@@ -7,6 +7,7 @@ import urllib.parse, os, sys, random, json
 
 base_url = 'https://pid.dk/?'
 #base_url = 'http://127.0.0.1:5000/?'
+#LANG="EN"
 LANG="DA"
 
 data = {"boeing": 1}
@@ -15,12 +16,12 @@ qr = { "boeing": 10 }
 
 layout = {
     "DOCS": [
-        "test.docx",
-        "test.xlsx",
-        "test.jpg",
-        "test.pdf",
+        "FINAL.da.xlsx",
+        "FINAL.da.docx",
     ]
 }
+
+
 """
 layout = {
     "Christmas Party": [
