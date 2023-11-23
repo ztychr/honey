@@ -5,10 +5,10 @@ from string import ascii_uppercase, ascii_lowercase
 from datetime import datetime
 import urllib.parse, os, sys, random, json
 
-base_url = 'https://pid.dk/?'
 #base_url = 'http://127.0.0.1:5000/?'
 #LANG="EN"
 LANG="DA"
+base_url = 'https://pid.dk/da/?' if LANG == "DA" else 'https://pid.dk/da/?'
 
 data = {"boeing": 1}
 

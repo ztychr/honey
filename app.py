@@ -10,6 +10,11 @@ def index():
     process_request(request)
     return render_template("index.html")
 
+@app.route("/da", methods=['GET'])
+def index_da():
+    process_request(request)
+    return render_template("index.da.html")
+
 def process_request(request):
     date = datetime.now()
     timestamp = datetime.timestamp(date)
