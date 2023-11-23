@@ -12,17 +12,8 @@ LANG="DA"
 
 data = {"boeing": 1}
 
-qr = { "boeing": 10 }
+qr = { "jylland-1": 1 }
 
-layout = {
-    "DOCS": [
-        "FINAL.da.xlsx",
-        "FINAL.da.docx",
-    ]
-}
-
-
-"""
 layout = {
     "Christmas Party": [
         "IMG_2622.jpg",
@@ -39,7 +30,7 @@ layout = {
         "Performance-Appraisal.docx"
     ]
 }
-"""
+
 if len(sys.argv) > 1:
     PATH=sys.argv[1]
 else:
@@ -171,6 +162,6 @@ def gen_time(sync: bool):
     return time
 
 if __name__ == "__main__":
-    gen_usb_files(data, layout, base_url)
-#    gen_qr_links(qr, base_url)
+#    gen_usb_files(data, layout, base_url)
+    gen_qr_links(qr, base_url)
 
