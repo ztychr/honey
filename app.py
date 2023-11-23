@@ -46,9 +46,9 @@ def process_request(request):
     }
 
     if src == "qr":
-        file_path = 'data/%s.qr.json' % group
+        file_path = 'data/%s.qr.results.json' % group
     else:
-        file_path = 'data/%s.drive.json' % group
+        file_path = 'data/%s.usb.results.json' % group
         
     try:
         with open(file_path, 'r') as file:
