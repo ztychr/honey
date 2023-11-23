@@ -8,7 +8,7 @@ import urllib.parse, os, sys, random, json
 #base_url = 'http://127.0.0.1:5000/?'
 #LANG="EN"
 LANG="DA"
-base_url = 'https://pid.dk/da/?' if LANG == "DA" else 'https://pid.dk/da/?'
+base_url = 'https://pid.dk/?' if LANG == "DA" else 'https://pid.dk/en/?'
 
 data = {"boeing": 1}
 

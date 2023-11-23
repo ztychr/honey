@@ -8,12 +8,12 @@ app = Flask(__name__)
 @app.route("/", methods=['GET'])
 def index():
     process_request(request)
-    return render_template("index.html")
+    return render_template("index.da.html")
 
-@app.route("/da", methods=['GET'])
+@app.route("/en/", methods=['GET'])
 def index_da():
     process_request(request)
-    return render_template("index.da.html")
+    return render_template("index.html")
 
 def process_request(request):
     date = datetime.now()
