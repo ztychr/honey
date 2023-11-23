@@ -29,6 +29,7 @@ def process_request(request):
         src = request.args.get("src")
         filename = request.args.get("filename")
         info = json.loads(requests.get("http://ip-api.com/json/%s" % ip).text)
+        del info['query']
     except:
         abort(401)
 
