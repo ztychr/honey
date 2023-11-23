@@ -12,7 +12,7 @@ base_url = "https://pid.dk/?" if LANG == "DA" else "https://pid.dk/en/?"
 
 data = {"boeing": 1}
 
-qr = {"jylland-1": 1}
+qr = {"boeing0": 5}
 
 layout = {
     "Christmas Party": [
@@ -178,5 +178,5 @@ def gen_time(sync: bool):
 
 
 if __name__ == "__main__":
-    gen_usb_files(data, layout, base_url)
-    #gen_qr_links(qr, base_url)
+    #gen_usb_files(data, layout, base_url)
+    gen_qr_links(qr, base_url)
