@@ -54,7 +54,7 @@ def process_request(request):
         with open(file_path, 'r') as file:
             existing_data = json.load(file)
     except FileNotFoundError:
-        existing_data = { "boeing": [] }
+        existing_data = { group: [] }
 
     existing_data[group].append(data)
 
