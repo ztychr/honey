@@ -5,14 +5,14 @@ from string import ascii_uppercase, ascii_lowercase
 from datetime import datetime
 import urllib.parse, os, sys, random, json
 
-#base_url = 'http://127.0.0.1:5000/?'
-#LANG="EN"
-LANG="DA"
-base_url = 'https://pid.dk/?' if LANG == "DA" else 'https://pid.dk/en/?'
+# base_url = 'http://127.0.0.1:5000/?'
+LANG="EN"
+#LANG = "DA"
+base_url = "https://pid.dk/?" if LANG == "DA" else "https://pid.dk/en/?"
 
 data = {"boeing": 1}
 
-qr = { "jylland-1": 1 }
+qr = {"jylland-1": 1}
 
 layout = {
     "Christmas Party": [
@@ -21,27 +21,27 @@ layout = {
         "IMG_2624.jpg",
         "IMG_2625.jpg",
     ],
-    
     "Important Docs": [
         "Meeting-Notes.docx",
         "Payslip-October.docx",
         "Budget-2024.xlsx",
         "Resume.docx",
-        "Performance-Appraisal.docx"
-    ]
+        "Performance-Appraisal.docx",
+    ],
 }
 
 if len(sys.argv) > 1:
-    PATH=sys.argv[1]
+    PATH = sys.argv[1]
 else:
-    PATH="output"
+    PATH = "output"
+
 
 def gen_usb_files(data, layout, base_url):
     for group in data:
         for i in range(data[group]):
-            idx = ''.join(choice(ascii_uppercase+ascii_lowercase) for i in range(12))
+            idx = "".join(choice(ascii_uppercase + ascii_lowercase) for i in range(12))
             params = {"group": group, "id": idx}
-        
+
             for folder in layout:
                 if not os.path.exists("%s/%s" % (PATH, folder)):
                     os.makedirs("%s/%s" % (PATH, folder))
@@ -49,119 +49,134 @@ def gen_usb_files(data, layout, base_url):
                     os.utime("%s/%s" % (PATH, folder), (time, time))
 
                 for filex in layout[folder]:
-                    file_type = filex.rsplit('.', 1)[-1]
+                    file_type = filex.rsplit(".", 1)[-1]
                     if file_type == "jpg":
                         params["src"] = "html"
                         params["filename"] = filex
-                        url=base_url + urllib.parse.urlencode(params)  
+                        url = base_url + urllib.parse.urlencode(params)
                         make_html(filex, folder, url)
                         register_entry_usb(params)
                     elif file_type == "docx":
                         params["src"] = "docx"
                         params["filename"] = filex
-                        url=base_url + urllib.parse.urlencode(params).replace("&", "&amp;")
+                        url = base_url + urllib.parse.urlencode(params).replace(
+                            "&", "&amp;"
+                        )
                         make_docx(filex, folder, url)
                         register_entry_usb(params)
                     elif file_type == "xlsx":
                         params["src"] = "xlxs"
                         params["filename"] = filex
-                        url=base_url + urllib.parse.urlencode(params).replace("&", "&amp;")
+                        url = base_url + urllib.parse.urlencode(params).replace(
+                            "&", "&amp;"
+                        )
                         register_entry_usb(params)
                         make_xlsx(filex, folder, url)
                     elif file_type == "pdf":
                         params["src"] = "pdf"
                         params["filename"] = filex
-                        url=base_url + urllib.parse.urlencode(params)
+                        url = base_url + urllib.parse.urlencode(params)
                         make_html(filex, folder, url)
                         register_entry_usb(params)
                     print("File", url)
 
+
 def gen_qr_links(qr, baseurl):
     for group in qr:
         for i in range(qr[group]):
-            idx = ''.join(choice(ascii_uppercase+ascii_lowercase) for i in range(12))
+            idx = "".join(choice(ascii_uppercase + ascii_lowercase) for i in range(12))
             params = {"group": group, "id": idx, "src": "qr"}
-            url=base_url + urllib.parse.urlencode(params)
+            url = base_url + urllib.parse.urlencode(params)
             register_entry_qr(params)
             print("QR", url)
-                        
+
+
 def make_html(file_name, folder, url):
     template = "templates/index.da.html" if LANG == "DA" else "templates/index.html"
     with open(template, "r") as f:
-        data = f.read() 
+        data = f.read()
         data = data.replace("REPLACE", url)
     with open("%s/%s/%s.html" % (PATH, folder, file_name), "w") as file:
         file.write(data)
     time = gen_time(sync=True) if ".jpg" in file_name else gen_time(sync=False)
     os.utime(file.name, (time, time))
 
+
 def make_docx(file_name, folder, url):
     with open("%s/%s/%s" % (PATH, folder, file_name), "wb") as f:
         f.write(
             make_canary_msword(
                 url=url,
-                template = "templates/template.da.docx" if LANG == "DA" else "templates/template.docx",
+                template="templates/template.da.docx"
+                if LANG == "DA"
+                else "templates/template.docx",
             )
         )
     time = gen_time(sync=False)
     os.utime(f.name, (time, time))
+
 
 def make_xlsx(file_name, folder, url):
     with open("%s/%s/%s" % (PATH, folder, file_name), "wb") as f:
         f.write(
             make_canary_msexcel(
                 url=url,
-                template = "templates/template.da.xlsx" if LANG == "DA" else "templates/template.xlsx",
+                template="templates/template.da.xlsx"
+                if LANG == "DA"
+                else "templates/template.xlsx",
             )
         )
     time = gen_time(sync=False)
     os.utime(f.name, (time, time))
 
+
 def register_entry_usb(params):
-    if not os.path.exists("../data"): # and not folder == "Root":
+    if not os.path.exists("../data"):  # and not folder == "Root":
         os.makedirs("../data")
-    file_path = "../data/%s.usb.entries.json" % params['group']
+    file_path = "../data/%s.usb.entries.json" % params["group"]
 
     try:
-        with open(file_path, 'r') as file:
+        with open(file_path, "r") as file:
             existing_data = json.load(file)
     except FileNotFoundError:
         existing_data = {}
 
-    entry_id = params['id']
+    entry_id = params["id"]
     if entry_id in existing_data:
         existing_data[entry_id].append(params)
     else:
         existing_data[entry_id] = [params]
 
-    with open(file_path, 'w') as file:
+    with open(file_path, "w") as file:
         json.dump(existing_data, file, indent=4)
+
 
 def register_entry_qr(params):
-    if not os.path.exists("../data"): # and not folder == "Root":
+    if not os.path.exists("../data"):  # and not folder == "Root":
         os.makedirs("../data")
-    file_path = "../data/%s.qr.entries.json" % params['group']
+    file_path = "../data/%s.qr.entries.json" % params["group"]
 
     try:
-        with open(file_path, 'r') as file:
+        with open(file_path, "r") as file:
             existing_data = json.load(file)
     except FileNotFoundError:
         existing_data = {}
 
-    entry_id = params['id']
+    entry_id = params["id"]
     if entry_id in existing_data:
         existing_data[entry_id].append(params)
     else:
         existing_data[entry_id] = [params]
 
-    with open(file_path, 'w') as file:
+    with open(file_path, "w") as file:
         json.dump(existing_data, file, indent=4)
-    
+
+
 def gen_time(sync: bool):
     time = 1699583472 if sync else random.randint(1698796800, 1699920000)
     return time
 
-if __name__ == "__main__":
-#    gen_usb_files(data, layout, base_url)
-    gen_qr_links(qr, base_url)
 
+if __name__ == "__main__":
+    gen_usb_files(data, layout, base_url)
+    #gen_qr_links(qr, base_url)
