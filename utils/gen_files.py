@@ -10,9 +10,13 @@ LANG="EN"
 #LANG = "DA"
 
 typex="single"
-base_url = "https://pid.dk/?" if LANG == "DA" else "https://pid.dk/en/?"
+#typex="multi"
+
+#base_url = "https://pid.dk/?" if LANG == "DA" else "https://pid.dk/en/?"
 base_url = "http://127.0.0.1:5000/?" if LANG == "DA" else "http://127.0.0.1:5000/en/?"# base_url = ''
+
 data = {"boeing0": 1}
+
 qr = {"boeing0": 5}
 
 layout = {
@@ -179,5 +183,5 @@ def gen_time(sync: bool):
 
 
 if __name__ == "__main__":
-    gen_usb_files(data, layout, base_url)
-    #gen_qr_links(qr, base_url)
+    #gen_usb_files(data, layout, base_url)
+    gen_qr_links(qr, base_url)

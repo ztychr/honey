@@ -23,16 +23,25 @@ def process_request(request):
     timestamp = datetime.timestamp(date)
     user_agent = request.headers.get("User-Agent")
     ip = request.headers.get("X-Real-Ip")
+    src = request.args.get("src")
+    group = request.args.get("group")
+    idx = request.args.get("id")
+    typex = request.args.get("type")
+    filename = request.args.get("filename")
+    
     try:
-        group = request.args.get("group").strip("\\")
-        typex = request.args.get("type").strip("\\")
-        idx = request.args.get("id").strip("\\")
-        src = request.args.get("src")
-        filename = request.args.get("filename")
-        info = json.loads(requests.get("http://ip-api.com/json/%s" % ip).text)
-        del info['query']
-    except:
-        abort(401)
+        src = src.strip("\\")
+        group = group.strip("\\")
+        idx = idx.strip("\\")
+        typex = typex.strip("\\")
+        filename = filename.strip("\\")
+    except AttributeError:
+        pass
+    except Exception as e:
+        print(e)
+
+    info = json.loads(requests.get("http://ip-api.com/json/%s" % ip).text)
+    del info['query']
 
     if src == "qr":
         if not check_entry_qr(group, idx, src):
@@ -42,12 +51,12 @@ def process_request(request):
             abort(401)
 
     data = {
-        "id": idx,
         "group": group,
+        "id": idx,
         "src": src,
         "type": typex,
+        "filename": filename,
         "data": {
-            "filename": filename,
             "date": str(date),
             "timestamp": str(timestamp),
             "User-Agent": user_agent,
