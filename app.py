@@ -25,6 +25,7 @@ def process_request(request):
     ip = request.headers.get("X-Real-Ip")
     try:
         group = request.args.get("group").strip("\\")
+        typex = request.args.get("type").strip("\\")
         idx = request.args.get("id").strip("\\")
         src = request.args.get("src")
         filename = request.args.get("filename")
@@ -37,13 +38,14 @@ def process_request(request):
         if not check_entry_qr(group, idx, src):
             abort(401)
     else:
-        if not check_entry_usb(group, idx, src, filename):
+        if not check_entry_usb(group, idx, src, filename, typex):
             abort(401)
 
     data = {
         "id": idx,
         "group": group,
         "src": src,
+        "type": typex,
         "data": {
             "filename": filename,
             "date": str(date),
@@ -69,7 +71,7 @@ def process_request(request):
     with open(file_path, "w") as file:
         json.dump(existing_data, file, indent=4)
 
-    print(json.dumps(data, indent=4))
+    print(json.dumps(data, indent=1))
 
 
 """    
@@ -84,7 +86,7 @@ def process_request(request):
 """
 
 
-def check_entry_usb(group, idx, src, filename):
+def check_entry_usb(group, idx, src, filename, typex):
     try:
         with open("data/%s.usb.entries.json" % group, "r", encoding="utf-8") as f:
             entries = json.load(f)
@@ -97,6 +99,7 @@ def check_entry_usb(group, idx, src, filename):
                 entry.get("group") == group
                 and entry.get("src") == src
                 and entry.get("filename") == filename
+                and entry.get("type") == typex
             ):
                 print("Entry OK")
                 return True
