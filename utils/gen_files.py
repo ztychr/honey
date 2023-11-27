@@ -5,12 +5,17 @@ from string import ascii_uppercase, ascii_lowercase
 from datetime import datetime
 import urllib.parse, os, sys, random, json
 
-# base_url = 'http://127.0.0.1:5000/?'
+
 LANG="EN"
 #LANG = "DA"
-base_url = "https://pid.dk/?" if LANG == "DA" else "https://pid.dk/en/?"
 
-data = {"boeing": 1}
+typex="single"
+#typex="multi"
+
+#base_url = "https://pid.dk/?" if LANG == "DA" else "https://pid.dk/en/?"
+base_url = "http://127.0.0.1:5000/?" if LANG == "DA" else "http://127.0.0.1:5000/en/?"# base_url = ''
+
+data = {"boeing0": 1}
 
 qr = {"boeing0": 5}
 
@@ -40,7 +45,7 @@ def gen_usb_files(data, layout, base_url):
     for group in data:
         for i in range(data[group]):
             idx = "".join(choice(ascii_uppercase + ascii_lowercase) for i in range(12))
-            params = {"group": group, "id": idx}
+            params = {"group": group, "id": idx, "type": typex}
 
             for folder in layout:
                 if not os.path.exists("%s/%s" % (PATH, folder)):

@@ -23,29 +23,40 @@ def process_request(request):
     timestamp = datetime.timestamp(date)
     user_agent = request.headers.get("User-Agent")
     ip = request.headers.get("X-Real-Ip")
+    src = request.args.get("src")
+    group = request.args.get("group")
+    idx = request.args.get("id")
+    typex = request.args.get("type")
+    filename = request.args.get("filename")
+    
     try:
-        group = request.args.get("group").strip("\\")
-        idx = request.args.get("id").strip("\\")
-        src = request.args.get("src")
-        filename = request.args.get("filename")
-        info = json.loads(requests.get("http://ip-api.com/json/%s" % ip).text)
-        del info['query']
-    except:
-        abort(401)
+        src = src.strip("\\")
+        group = group.strip("\\")
+        idx = idx.strip("\\")
+        typex = typex.strip("\\")
+        filename = filename.strip("\\")
+    except AttributeError:
+        pass
+    except Exception as e:
+        print(e)
+
+    info = json.loads(requests.get("http://ip-api.com/json/%s" % ip).text)
+    del info['query']
 
     if src == "qr":
         if not check_entry_qr(group, idx, src):
             abort(401)
     else:
-        if not check_entry_usb(group, idx, src, filename):
+        if not check_entry_usb(group, idx, src, filename, typex):
             abort(401)
 
     data = {
-        "id": idx,
         "group": group,
+        "id": idx,
         "src": src,
+        "type": typex,
+        "filename": filename,
         "data": {
-            "filename": filename,
             "date": str(date),
             "timestamp": str(timestamp),
             "User-Agent": user_agent,
@@ -69,7 +80,7 @@ def process_request(request):
     with open(file_path, "w") as file:
         json.dump(existing_data, file, indent=4)
 
-    print(json.dumps(data, indent=4))
+    print(json.dumps(data, indent=1))
 
 
 """    
@@ -84,7 +95,7 @@ def process_request(request):
 """
 
 
-def check_entry_usb(group, idx, src, filename):
+def check_entry_usb(group, idx, src, filename, typex):
     try:
         with open("data/%s.usb.entries.json" % group, "r", encoding="utf-8") as f:
             entries = json.load(f)
@@ -97,6 +108,7 @@ def check_entry_usb(group, idx, src, filename):
                 entry.get("group") == group
                 and entry.get("src") == src
                 and entry.get("filename") == filename
+                and entry.get("type") == typex
             ):
                 print("Entry OK")
                 return True
