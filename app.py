@@ -40,16 +40,6 @@ def process_request(request):
     except Exception as e:
         print(e)
 
-    if src == "qr":
-        if not check_entry_qr(group, idx, src):
-            abort(401)
-    else:
-        if not check_entry_usb(group, idx, src, filename, typex):
-            abort(401)
-
-    info = json.loads(requests.get("http://ip-api.com/json/%s" % ip).text)
-    del info['query']
-
     data = {
         "group": group,
         "id": idx,
@@ -61,8 +51,22 @@ def process_request(request):
             "timestamp": str(timestamp),
             "User-Agent": user_agent,
         },
-        "whois": info,
     }
+    
+    if src == "qr":
+        if not check_entry_qr(group, idx, src):
+            fault_file = "data/faults/faults.%s.qr.json" % group
+            register_fault(data, fault_file)
+            abort(401)
+    else:
+        if not check_entry_usb(group, idx, src, filename, typex):
+            fault_file = "data/faults/faults.%s.usb.json" % group
+            register_fault(data, fault_file)
+            abort(401)
+
+    info = json.loads(requests.get("http://ip-api.com/json/%s" % ip).text)
+    del info['query']
+    data["whois"] = info
 
     if not os.path.exists("data/results"):
         os.makedirs("data/results")
@@ -77,13 +81,12 @@ def process_request(request):
             existing_data = json.load(file)
     except FileNotFoundError:
         existing_data = {group: []}
-
+        
     existing_data[group].append(data)
 
     with open(file_path, "w", encoding="utf-8") as file:
         json.dump(existing_data, file, indent=4)
-
-    #print(json.dumps(data, indent=2))
+#    print(json.dumps(data, indent=2))
 
 
 def check_entry_usb(group, idx, src, filename, typex):
@@ -123,6 +126,13 @@ def check_entry_qr(group, idx, src):
 
     print("Entry NOT OK")
     return False
+
+
+def register_fault(data, fault_file):
+    if not os.path.exists("data/faults"):
+        os.makedirs("data/faults")
+    with open(fault_file, "a", encoding="utf-8") as file:
+        json.dump(data, file, indent=4)
 
 
 """    
