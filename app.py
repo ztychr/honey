@@ -1,7 +1,7 @@
 from flask import Flask, request, render_template, send_file, abort
 from urllib.parse import urlparse
 from datetime import datetime
-import json, requests
+import json, requests, os
 
 app = Flask(__name__)
 
@@ -40,15 +40,15 @@ def process_request(request):
     except Exception as e:
         print(e)
 
-    info = json.loads(requests.get("http://ip-api.com/json/%s" % ip).text)
-    del info['query']
-
     if src == "qr":
         if not check_entry_qr(group, idx, src):
             abort(401)
     else:
         if not check_entry_usb(group, idx, src, filename, typex):
             abort(401)
+
+    info = json.loads(requests.get("http://ip-api.com/json/%s" % ip).text)
+    del info['query']
 
     data = {
         "group": group,
@@ -64,40 +64,31 @@ def process_request(request):
         "whois": info,
     }
 
+    if not os.path.exists("data/results"):
+        os.makedirs("data/results")
+
     if src == "qr":
-        file_path = "data/%s.qr.results.json" % group
+        file_path = "data/results/%s.qr.json" % group
     else:
-        file_path = "data/%s.usb.results.json" % group
+        file_path = "data/results/%s.usb.json" % group
 
     try:
-        with open(file_path, "r") as file:
+        with open(file_path, "r", encoding="utf-8") as file:
             existing_data = json.load(file)
     except FileNotFoundError:
         existing_data = {group: []}
 
     existing_data[group].append(data)
 
-    with open(file_path, "w") as file:
+    with open(file_path, "w", encoding="utf-8") as file:
         json.dump(existing_data, file, indent=4)
 
-    print(json.dumps(data, indent=1))
-
-
-"""    
-    if src == "qr":
-        with open('data/%s.qr.json' % group, 'a', encoding='utf-8') as f:
-            json.dump(data, f, ensure_ascii=False, indent=4)
-    else:
-        with open('data/%s.drive.json' % group, 'a', encoding='utf-8') as f:
-            json.dump(data, f, ensure_ascii=False, indent=4)
-            
-    return render_template("index.da.html")
-"""
+    #print(json.dumps(data, indent=2))
 
 
 def check_entry_usb(group, idx, src, filename, typex):
     try:
-        with open("data/%s.usb.entries.json" % group, "r", encoding="utf-8") as f:
+        with open("data/entries/%s.usb.json" % group, "r") as f:
             entries = json.load(f)
     except FileNotFoundError:
         return abort(401)
@@ -119,7 +110,7 @@ def check_entry_usb(group, idx, src, filename, typex):
 
 def check_entry_qr(group, idx, src):
     try:
-        with open("data/%s.qr.entries.json" % group, "r", encoding="utf-8") as f:
+        with open("data/entries/%s.qr.json" % group, "r") as f:
             entries = json.load(f)
     except FileNotFoundError:
         return abort(401)
@@ -132,3 +123,15 @@ def check_entry_qr(group, idx, src):
 
     print("Entry NOT OK")
     return False
+
+
+"""    
+    if src == "qr":
+        with open('data/%s.qr.json' % group, 'a', encoding='utf-8') as f:
+            json.dump(data, f, ensure_ascii=False, indent=4)
+    else:
+        with open('data/%s.drive.json' % group, 'a', encoding='utf-8') as f:
+            json.dump(data, f, ensure_ascii=False, indent=4)
+            
+    return render_template("index.da.html")
+"""

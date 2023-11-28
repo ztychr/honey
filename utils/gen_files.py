@@ -136,9 +136,9 @@ def make_xlsx(file_name, folder, url):
 
 
 def register_entry_usb(params):
-    if not os.path.exists("../data"):  # and not folder == "Root":
-        os.makedirs("../data")
-    file_path = "../data/%s.usb.entries.json" % params["group"]
+    if not os.path.exists("../data/entries"):  # and not folder == "Root":
+        os.makedirs("../data/entries")
+    file_path = "../data/entries/%s.usb.json" % params["group"]
 
     try:
         with open(file_path, "r") as file:
@@ -157,9 +157,9 @@ def register_entry_usb(params):
 
 
 def register_entry_qr(params):
-    if not os.path.exists("../data"):  # and not folder == "Root":
-        os.makedirs("../data")
-    file_path = "../data/%s.qr.entries.json" % params["group"]
+    if not os.path.exists("../data/entries"):  # and not folder == "Root":
+        os.makedirs("../data/entries")
+    file_path = "../data/entries/%s.qr.json" % params["group"]
 
     try:
         with open(file_path, "r") as file:
@@ -183,5 +183,5 @@ def gen_time(sync: bool):
 
 
 if __name__ == "__main__":
-    #gen_usb_files(data, layout, base_url)
+    gen_usb_files(data, layout, base_url)
     gen_qr_links(qr, base_url)
