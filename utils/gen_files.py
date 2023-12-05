@@ -6,32 +6,41 @@ from datetime import datetime
 import urllib.parse, os, sys, random, json
 
 
-LANG="EN"
-#LANG = "DA"
+#LANG="EN"
+LANG = "DA"
 
-typex="single"
-#typex="multi"
+base_url = "https://pid.dk/?" if LANG == "DA" else "https://pid.dk/en/?"
+#base_url = "http://127.0.0.1:5000/?" if LANG == "DA" else "http://127.0.0.1:5000/en/?"# base_url = ''
 
-#base_url = "https://pid.dk/?" if LANG == "DA" else "https://pid.dk/en/?"
-base_url = "http://127.0.0.1:5000/?" if LANG == "DA" else "http://127.0.0.1:5000/en/?"# base_url = ''
-
-data = {"boeing0": 1}
+#typex="single"
+typex="multi"
+data = {"boeing4": 1}
 
 qr = {"boeing0": 5}
 
 layout = {
-    "Christmas Party": [
+    "Sommer 2023": [
         "IMG_2622.jpg",
         "IMG_2623.jpg",
         "IMG_2624.jpg",
         "IMG_2625.jpg",
+        "IMG_2626.jpg",
+        "IMG_2627.jpg",
+        "IMG_2628.jpg",
+        "IMG_2629.jpg",
+        "IMG_2630.jpg",
+        "IMG_2631.jpg",
     ],
-    "Important Docs": [
-        "Meeting-Notes.docx",
-        "Payslip-October.docx",
-        "Budget-2024.xlsx",
-        "Resume.docx",
-        "Performance-Appraisal.docx",
+    "Vigtige Dokumenter": [
+        "Mødenoter.docx",
+        "Udkast-til-lønsammensætning.docx",
+        "Ansættelsesbrev.docx",
+        "Budget.xlsx",
+        "Afdrag-2024.xlsx",
+        "CV.docx",
+        "GF-referat.docx",
+        "AB-nøgletal.xlsx",
+        "MUS-forberedelse.docx",
     ],
 }
 
@@ -178,10 +187,14 @@ def register_entry_qr(params):
 
 
 def gen_time(sync: bool):
-    time = 1699583472 if sync else random.randint(1698796800, 1699920000)
+    time = 1687793905 if sync else random.randint(1682942400, 1699876800)
     return time
 
 
 if __name__ == "__main__":
     gen_usb_files(data, layout, base_url)
+<<<<<<< HEAD
     gen_qr_links(qr, base_url)
+=======
+    #gen_qr_links(qr, base_url)
+>>>>>>> 5d4b997 (.)
